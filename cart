@@ -1,0 +1,39 @@
+#!/usr/bin/env sh
+
+function run_command () {
+    PLENVBIN=${PLENVBIN:=$HOME/.plenv/bin}
+
+    ## only load plenv if we can't already find it
+    if ! type plenv > /dev/null 2>&1;
+    then
+        export PATH=$PLENVBIN:$PATH
+        eval "$(plenv init -)"
+    fi
+
+    ## change to script dir
+    builtin cd $(dirname $0)
+
+    ## run given command via carton via plenv
+    plenv exec carton exec -- $*
+}
+
+function show_usage () {
+  cat <<USAGE
+usage: $0 bin/your_script.pl --options
+
+Run a script via plenv and Carton.
+USAGE
+}
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+          show_usage
+          exit 0
+          ;;
+        *)
+          run_command $*
+          exit 1
+          ;;
+    esac
+done
