@@ -40,7 +40,7 @@ while [[ $# -gt 0 ]]; do
           ;;
         *)
           run_command $*
-          exit 0
+          exit $?
           ;;
     esac
 done
