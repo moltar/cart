@@ -7,10 +7,14 @@ function run_command () {
     PLENVBIN=${PLENVBIN:=$HOME/.plenv/bin}
 
     ## only load plenv if we can't already find it
-    if ! type plenv > /dev/null 2>&1;
-    then
-        export PATH=$PLENVBIN:$PATH
-        eval "$(plenv init -)"
+    if ! type plenv > /dev/null 2>&1; then
+      ## handle mac brew install of plenv
+      if [ $(uname) == 'Darwin' ] && [ -x '/usr/local/bin/plenv' ]; then
+        PATH=/usr/local/bin:$PATH
+      fi
+      export PATH="$PLENVBIN:$PATH"
+
+      eval "$(plenv init -)"
     fi
 
     ## change to script dir
